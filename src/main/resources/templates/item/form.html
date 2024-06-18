@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+
+<body>
+<section layout:fragment="custom-content">
+    <form th:action="@{/items}" th:object="${menuItem}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{menuItemID}" />
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" th:field="*{name}" />
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
+        </div>
+        <div>
+            <label for="description">Description:</label>
+            <input type="text" id="description" th:field="*{description}" />
+            <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</span>
+        </div>
+        <div>
+            <label for="price">Price:</label>
+            <input type="number" id="price" th:field="*{price}" step="0.01" />
+            <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Price Error</span>
+        </div>
+        <div>
+            <label for="menu">Menu:</label>
+            <select id="menu" th:field="*{menu.menuID}" required>
+                <option th:each="menu : ${menus}" th:value="${menu.menuID}" th:text="${menu.name}">Menu Name</option>
+            </select>
+        </div>
+        <div>
+            <label for="imageFile">Upload Image:</label>
+            <input type="file" id="imageFile" th:field="*{imageFile}" />
+        </div>
+        <div>
+            <label for="imageFiles">Upload Multiple Images:</label>
+            <input type="file" id="imageFiles" th:field="*{imageFiles}" multiple />
+        </div>
+        <div>
+            <button type="submit">Save</button>
+        </div>
+    </form>
+    <a th:href="@{/}">Back to Menu Items</a>
+</section>
+</body>
+</html>

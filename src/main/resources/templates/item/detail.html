@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+
+<body>
+<section layout:fragment="custom-content">
+    <h1>Menu Item Detail</h1>
+    <p><strong>ID:</strong> <span th:text="${menuItem.menuItemID}">1</span></p>
+    <p><strong>Name:</strong> <span th:text="${menuItem.name}">MenuItem Name</span></p>
+    <p><strong>Description:</strong> <span th:text="${menuItem.description}">Description</span></p>
+    <p><strong>Price:</strong> <span th:text="${menuItem.price}">0.00</span></p>
+    <p><strong>Menu:</strong> <span th:text="${menuItem.menu.name}">Menu Name</span></p>
+
+    <a th:href="@{/menuitems}">Back to Menu Items</a>
+</section>
+</body>
+</html>

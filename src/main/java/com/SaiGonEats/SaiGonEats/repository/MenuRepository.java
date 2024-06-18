@@ -1,10 +1,9 @@
 package com.SaiGonEats.SaiGonEats.repository;
 
-import com.SaiGonEats.SaiGonEats.model.Restaurant;
+import com.SaiGonEats.SaiGonEats.model.Menu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
-public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
+public interface MenuRepository extends JpaRepository<Menu, Long> {
 }
