@@ -1,44 +1,65 @@
 package com.SaiGonEats.SaiGonEats.service;
 
+import com.SaiGonEats.SaiGonEats.Role;
 import com.SaiGonEats.SaiGonEats.model.User;
-import com.SaiGonEats.SaiGonEats.repository.UserRepository;
+import com.SaiGonEats.SaiGonEats.repository.IRoleRepository;
+import com.SaiGonEats.SaiGonEats.repository.IUserRepository;
+import groovy.util.logging.Slf4j;
+import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+@Slf4j
+@Transactional
+public class UserService implements UserDetailsService {
     @Autowired
-    private UserRepository userRepository;
-    public List<User> getAllUser() {
-        return userRepository.findAll();
+    private IUserRepository userRepository;
+    @Autowired
+    private IRoleRepository roleRepository;
+    // Lưu người dùng mới vào cơ sở dữ liệu sau khi mã hóa mật khẩu.
+    public void save(@NotNull User user) {
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        userRepository.save(user);
     }
-    public Optional<User> getUserByID(Long id) {
-        return userRepository.findById(id);
+    // Gán vai trò mặc định cho người dùng dựa trên tên người dùng.
+    public void setDefaultRole(String username) {
+        userRepository.findByUsername(username).ifPresentOrElse(
+                user -> {
+                    user.getRoles().add(roleRepository.findRoleById(Role.USER.value));
+                    userRepository.save(user);
+                },
+                () -> { throw new UsernameNotFoundException("User not found"); }
+        );
     }
-    public User createUser(User user){
-        return userRepository.save(user);
+    // Tải thông tin chi tiết người dùng để xác thực.
+    @Override
+    public UserDetails loadUserByUsername(String username) throws
+            UsernameNotFoundException {
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .authorities(user.getAuthorities())
+                .accountExpired(!user.isAccountNonExpired())
+                .accountLocked(!user.isAccountNonLocked())
+                .credentialsExpired(!user.isCredentialsNonExpired())
+                .disabled(!user.isEnabled())
+                .build();
     }
-    public Optional<User> updateUser(Long id, User user) {
-        Optional<User> exsitingUser = userRepository.findById(id);
-        if (exsitingUser.isPresent()) {
-            User foundUser = exsitingUser.get();
-            foundUser.setName(user.getName());
-            foundUser.setEmail(user.getEmail());
-            foundUser.setPassword(user.getPassword());
-            foundUser.setPhone(user.getPhone());
-            foundUser.setAddress(user.getAddress());
-            userRepository.save(user);//The existing ID will override the current value
-            return Optional.of(user);
-        }
-        else {
-            return Optional.empty();
-        }
-    }
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    // Tìm kiếm người dùng dựa trên tên đăng nhập.
+    public Optional<User> findByUsername(String username) throws
+            UsernameNotFoundException {
+        return userRepository.findByUsername(username);
     }
 
 }
