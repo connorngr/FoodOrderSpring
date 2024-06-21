@@ -3,6 +3,7 @@ package com.SaiGonEats.SaiGonEats.service;
 
 import com.SaiGonEats.SaiGonEats.model.MenuItem;
 import com.SaiGonEats.SaiGonEats.repository.MenuItemRepository;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,26 @@ public class MenuItemService {
     public Optional<MenuItem> getMenuItemById(Long id) {
         return menuItemRepository.findById(id);
     }
-    public MenuItem saveMenuItem(MenuItem menuItem) {
+    public MenuItem addProduct(MenuItem menuItem) {
         return menuItemRepository.save(menuItem);
     }
-    public void deleteMenuItem(Long id) {
+    public MenuItem updateProduct(@NotNull MenuItem menuItem) {
+        MenuItem existingMenuItem = menuItemRepository.findById(menuItem.getMenuItemID())
+                .orElseThrow(() -> new IllegalStateException("Product with ID " + menuItem.getMenuItemID() + " does not exist."));
+        existingMenuItem.setName(menuItem.getName());
+        existingMenuItem.setPrice(menuItem.getPrice());
+        existingMenuItem.setDescription(menuItem.getDescription());
+        existingMenuItem.setMenu(menuItem.getMenu());
+        existingMenuItem.setImage(menuItem.getImage());
+        existingMenuItem.setImages(menuItem.getImages());
+        return menuItemRepository.save(existingMenuItem);
+    }
+
+    // Delete a product by its id
+    public void deleteProductById(Long id) {
+        if (!menuItemRepository.existsById(id)) {
+            throw new IllegalStateException("Product with ID " + id + " does not exist.");
+        }
         menuItemRepository.deleteById(id);
     }
 }

@@ -8,9 +8,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @NoArgsConstructor
@@ -33,12 +36,7 @@ public class MenuItem {
     @Min(value = 0, message = "Price must be positive")
     private double price;
 
-    @ElementCollection
-    private List<String> images;
+    private String image;
 
-    @Transient
-    private MultipartFile imageFile;
-
-    @Transient
-    private List<MultipartFile> imageFiles;
+    private List<String> images = new ArrayList<>();
 }

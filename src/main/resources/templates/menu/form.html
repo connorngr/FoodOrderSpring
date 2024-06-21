@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout.html}">
 
 <body>
 <section layout:fragment="custom-content">
-    <form th:action="@{/menu}" th:object="${menu}" method="post">
+    <form th:action="@{/menu/new}" th:object="${menu}" method="post">
         <input type="hidden" th:field="*{menuID}" />
         <div>
             <label for="name">Name:</label>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout.html}">
 
 <body>
@@ -28,12 +29,12 @@
             </select>
         </div>
         <div>
-            <label for="imageFile">Upload Image:</label>
-            <input type="file" id="imageFile" th:field="*{imageFile}" />
+            <label for="image">Upload Image:</label>
+            <input type="file" id="image" th:field="*{image}" />
         </div>
         <div>
-            <label for="imageFiles">Upload Multiple Images:</label>
-            <input type="file" id="imageFiles" th:field="*{imageFiles}" multiple />
+            <label for="images">Upload Multiple Images:</label>
+            <input type="file" id="images" th:field="*{images}" multiple />
         </div>
         <div>
             <button type="submit">Save</button>

@@ -33,18 +33,40 @@ public class MenuController {
         return "menu/form";
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public String saveMenu(@Valid @ModelAttribute Menu menu, BindingResult result) {
         if (result.hasErrors()) {
             return "menu/form";
         }
-        menuService.saveMenu(menu);
+        menuService.addMenu(menu);
+        return "redirect:/menu";
+    }
+    @GetMapping("/edit/{id}")
+    public String showUpdateForm(@PathVariable("id") Long id, Model model) {
+        Menu menu = menuService.getMenuById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category Id:" + id));
+        model.addAttribute("menu", menu);
+        return "/menu/update";
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateCategory(@PathVariable("id") Long id, @Valid Menu menu,
+                                 BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            menu.setMenuID(id);
+            return "/menu/update";
+        }
+        menuService.updateMenu(menu);
+        model.addAttribute("menus", menuService.getAllMenus());
         return "redirect:/menu";
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteMenu(@PathVariable Long id) {
+    public String deleteCategory(@PathVariable("id") Long id, Model model) {
+        Menu category = menuService.getMenuById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category Id:" + id));
         menuService.deleteMenu(id);
+        model.addAttribute("menus", menuService.getAllMenus());
         return "redirect:/menu";
     }
 }
