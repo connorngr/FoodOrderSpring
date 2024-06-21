@@ -1,23 +1,29 @@
 package com.SaiGonEats.SaiGonEats.model;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
+import java.util.Date;
+
 @Setter
 @Getter
-public class ShoppingCartItem {
+@Entity
+public class OrderDetail {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long orderDetailId;
+
     @ManyToOne
-    @JoinColumn(name = "shoppingCartID")
-    private ShoppingCart shoppingCart;
+    @JoinColumn(name = "orderID", nullable = false)
+    private Order order;
+
     @ManyToOne
-    @JoinColumn(name = "menuItemID")
+    @JoinColumn(name = "menuItemID", nullable = false)
     private MenuItem menuItem;
-    private int quantity;
+
+    private Integer quantity;
+
     private int price;
 }

@@ -41,7 +41,7 @@ public class User implements UserDetails {
     @Column(name = "email", length = 50, unique = true)
     @NotBlank(message = "Email is required")
     @Size(min = 1, max = 50, message = "Email must be between 1 and 50 characters")
-    @Email
+    @Email(message = "Email should be valid")
     private String email;
     @Column(name = "phone", length = 10, unique = true)
     @Length(min = 10, max = 10, message = "Phone must be 10 characters")
@@ -59,6 +59,8 @@ public class User implements UserDetails {
     private MultipartFile imageFile;
     @Column(name = "provider", length = 50)
     private String provider;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private ShoppingCart shoppingCart;
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),

@@ -27,7 +27,6 @@ public class UserController {
     public String login() {
         return "user/login";
     }
-
     @GetMapping("/register")
     public String register(@NotNull Model model) {
         model.addAttribute("user", new User()); // Thêm một đối tượng User mới vào model

@@ -7,7 +7,9 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -15,6 +17,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Data
+@Setter
+@Getter
 public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +35,7 @@ public class MenuItem {
     private String description;
     @NotNull(message = "Price is required")
     @Min(value = 0, message = "Price must be positive")
-    private double price;
+    private int price;
 
     @ElementCollection
     private List<String> images;

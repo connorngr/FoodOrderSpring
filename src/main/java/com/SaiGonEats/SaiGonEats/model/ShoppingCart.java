@@ -2,14 +2,22 @@ package com.SaiGonEats.SaiGonEats.model;
 
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Data
 public class ShoppingCart {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//    @OneToOne
-//    private User user;
-//    @OneToMany
-//    private ShoppingCartItem shoppingCartItem;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @OneToOne
+    @JoinColumn(name = "userID")
+    private User user;
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
+    private List<ShoppingCartItem> items = new ArrayList<>(); // Initialize here;
 }
