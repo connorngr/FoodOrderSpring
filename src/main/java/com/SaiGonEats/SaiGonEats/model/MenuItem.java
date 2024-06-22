@@ -36,7 +36,12 @@ public class MenuItem {
     @Min(value = 0, message = "Price must be positive")
     private double price;
 
-    private String image;
+    @ElementCollection
+    private List<String> images;
 
-    private List<String> images = new ArrayList<>();
+    @Transient
+    private MultipartFile imageFile;
+
+    @Transient
+    private List<MultipartFile> imageFiles;
 }

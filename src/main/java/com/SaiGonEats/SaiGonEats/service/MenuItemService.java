@@ -30,7 +30,6 @@ public class MenuItemService {
         existingMenuItem.setPrice(menuItem.getPrice());
         existingMenuItem.setDescription(menuItem.getDescription());
         existingMenuItem.setMenu(menuItem.getMenu());
-        existingMenuItem.setImage(menuItem.getImage());
         existingMenuItem.setImages(menuItem.getImages());
         menuItemRepository.save(existingMenuItem);
     }

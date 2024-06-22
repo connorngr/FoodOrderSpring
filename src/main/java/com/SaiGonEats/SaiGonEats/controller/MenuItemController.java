@@ -55,73 +55,49 @@ public class MenuItemController {
     }
 
     @PostMapping("/new")
-    public String saveMenuItem(@Valid @ModelAttribute MenuItem menuItem, BindingResult result, Model model,
-                               @RequestParam("image") MultipartFile image,
-                               @RequestParam("images") MultipartFile[] images) {
+    public String saveMenuItem(@Valid @ModelAttribute MenuItem menuItem, BindingResult result, Model model) {
 //        if (result.hasErrors()) {
-//            model.addAttribute("menuItem", menuItem);
 //            model.addAttribute("menus", menuService.getAllMenus());
 //            return "item/form";
 //        }
-
         List<String> images_temp = new ArrayList<>();
 
         // Handle single image file
-        if (!image.isEmpty()) {
-            try {
-                String imageName = saveImageStatic(image);
-                menuItem.setImage("/images/" + imageName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        MultipartFile imageFile = menuItem.getImageFile();
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imagePath = saveUploadedFile(imageFile);
+            images_temp.add(imagePath);
         }
-        int i=0;
 
-        for (MultipartFile image_temp : images) {
-            if (!image_temp.isEmpty()) {
-                try {
-                    String imageUrl = saveImageStatic(image_temp);
-                    images_temp.add("/images/" + imageUrl);
-                } catch (IOException e) {
-                    e.printStackTrace();
+        // Handle multiple image files
+        List<MultipartFile> imageFiles = menuItem.getImageFiles();
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            for (MultipartFile file : imageFiles) {
+                if (!file.isEmpty()) {
+                    String imagePath = saveUploadedFile(file);
+                    images_temp.add(imagePath);
                 }
             }
         }
+
         // Set the images field
         menuItem.setImages(images_temp);
-
-//        MultipartFile imageFile = menuItem.getImageFile();
-//        if (imageFile != null && !imageFile.isEmpty()) {
-//            String imagePath = saveUploadedFile(imageFile);
-//            images.add(imagePath);
-//        }
-//
-//        // Handle multiple image files
-//        List<MultipartFile> imageFiles = menuItem.getImageFiles();
-//        if (imageFiles != null && !imageFiles.isEmpty()) {
-//            for (MultipartFile file : imageFiles) {
-//                if (!file.isEmpty()) {
-//                    String imagePath = saveUploadedFile(file);
-//                    images.add(imagePath);
-//                }
-//            }
-//        }
 
         menuItemService.addMenuItem(menuItem);
         return "redirect:/";
     }
 
-//    private String saveUploadedFile(MultipartFile file) {
-//        try {
-//            byte[] bytes = file.getBytes();
-//            Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
-//            Files.write(path, bytes);
-//            return "/images/" + file.getOriginalFilename();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+    private String saveUploadedFile(MultipartFile file) {
+        try {
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+            Files.write(path, bytes);
+            return "/images/" + file.getOriginalFilename();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     private String saveImageStatic(MultipartFile image) throws IOException {
 
         Path dirImages = Paths.get("target/classes/static/images");
@@ -146,9 +122,7 @@ public class MenuItemController {
     }
     // Process the form for updating a product
     @PostMapping("/update/{id}")
-    public String updateProduct(@PathVariable Long id, @Valid MenuItem menuItem,
-                                BindingResult result,@RequestParam("image") MultipartFile image,
-                                @RequestParam("images") MultipartFile[] images) {
+    public String updateProduct(@PathVariable Long id, @Valid MenuItem menuItem,BindingResult result) {
         if (result.hasErrors()) {
             menuItem.setMenuItemID(id); // set id to keep it in the form in case of errors
             return "/item/update";
@@ -156,43 +130,22 @@ public class MenuItemController {
         List<String> images_temp = new ArrayList<>();
 
         // Handle single image file
-        if (!image.isEmpty()) {
-            try {
-                String imageName = saveImageStatic(image);
-                menuItem.setImage("/images/" + imageName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        MultipartFile imageFile = menuItem.getImageFile();
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imagePath = saveUploadedFile(imageFile);
+            images_temp.add(imagePath);
         }
-        int i=0;
 
-        for (MultipartFile image_temp : images) {
-            if (!image_temp.isEmpty()) {
-                try {
-                    String imageUrl = saveImageStatic(image_temp);
-                    images_temp.add("/images/" + imageUrl);
-                } catch (IOException e) {
-                    e.printStackTrace();
+        // Handle multiple image files
+        List<MultipartFile> imageFiles = menuItem.getImageFiles();
+        if (imageFiles != null && !imageFiles.isEmpty()) {
+            for (MultipartFile file : imageFiles) {
+                if (!file.isEmpty()) {
+                    String imagePath = saveUploadedFile(file);
+                    images_temp.add(imagePath);
                 }
             }
         }
-
-//        MultipartFile imageFile = menuItem.getImageFile();
-//        if (imageFile != null && !imageFile.isEmpty()) {
-//            String imagePath = saveUploadedFile(imageFile);
-//            images.add(imagePath);
-//        }
-//
-//        // Handle multiple image files
-//        List<MultipartFile> imageFiles = menuItem.getImageFiles();
-//        if (imageFiles != null && !imageFiles.isEmpty()) {
-//            for (MultipartFile file : imageFiles) {
-//                if (!file.isEmpty()) {
-//                    String imagePath = saveUploadedFile(file);
-//                    images.add(imagePath);
-//                }
-//            }
-//        }
 
         // Set the images field
         menuItem.setImages(images_temp);

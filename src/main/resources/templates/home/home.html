@@ -11,46 +11,120 @@
     <a th:href="@{/items/new}">
         Create New Menu Item
     </a>
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Images</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Menu</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="menuItem : ${menuItems}">
-            <td th:text="${menuItem.menuItemID}">1</td>
-            <td th:text="${menuItem.name}">MenuItem Name</td>
-            <td>
-                <div th:if="${menuItem.images != null and !menuItem.images.isEmpty()}">
-                    <div th:each="image : ${menuItem.images}">
-                        <img th:src="@{${image}}" alt="Menu Item Image" style="max-width: 100px; max-height: 100px;" />
+    <div class="d-flex flex-wrap">
+    <div class="p-4 max-w-sm" th:each="menuItem : ${menuItems}">
+        <a th:href="@{/items/{id}(id=${menuItem.menuItemID})}" class="block rounded-lg p-4 shadow-sm shadow-indigo-100">
+<!--            <div th:if="${menuItem.images != null and !menuItem.images.isEmpty()}">-->
+<!--                <img th:src="@{${menuItem.images[0]}}" alt="Menu Item Image" style="max-width: 100px; max-height: 100px;"-->
+<!--                     class="h-56 w-full rounded-md object-cover"/>-->
+<!--            </div>-->
+            <img
+                    alt=""
+                    src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+                    class="h-56 w-full rounded-md object-cover"
+            />
+        </a>
+            <div class="mt-2">
+                <dl>
+                    <div>
+                        <dt class="sr-only">Price</dt>
+                        <dd class="text-sm text-gray-500" th:text="${menuItem.price} + 'VND'">$240,000</dd>
+                    </div>
+                    <div>
+                        <dt class="sr-only">Name</dt>
+                        <dd class="font-medium" th:text="${menuItem.menu.name} +',' + ${menuItem.name}">menu</dd>
+                    </div>
+                </dl>
+
+                <div class="mt-6 flex items-center gap-8 text-xs">
+                    <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
+                        <svg
+                                class="size-4 text-indigo-700"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor">
+                            <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
+                            />
+                        </svg>
+
+                        <div class="mt-1.5 sm:mt-0">
+                            <p class="text-gray-500">Đánh giá</p>
+                            <p class="font-medium">2</p>
+                        </div>
+                    </div>
+
+                    <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
+                        <svg
+                                class="size-4 text-indigo-700"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                        >
+                            <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                            />
+                        </svg>
+
+                        <div class="mt-1.5 sm:mt-0">
+                            <p class="text-gray-500">Phổ biến</p>
+
+                            <p class="font-medium">Trung</p>
+                        </div>
+                    </div>
+
+                    <div class="sm:inline-flex sm:shrink-0 sm:items-center sm:gap-2">
+                        <svg
+                                class="size-4 text-indigo-700"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                        >
+                            <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                            />
+                        </svg>
+
+                        <div class="mt-1.5 sm:mt-0">
+                            <p class="text-gray-500">Số lượng</p>
+                            <p class="font-medium">4</p>
+                        </div>
                     </div>
                 </div>
-            </td>
+            </div>
+        <!-- Base -->
 
-            <td th:text="${menuItem.description}">Description</td>
-            <td th:text="${menuItem.price}">0.00</td>
-            <td th:text="${menuItem.menu.name}">Menu Name</td>
-            <td>
-                <form th:action="@{/cart/add}" method="post">
-                    <input type="hidden" th:name="menuItemID" th:value="${menuItem.menuItemID}" />
-                    <input type="number" name="quantity" min="1" value="1" />
-                    <button type="submit">Add to Cart</button>
-                </form>
-                <a th:href="@{/items/{id}(id=${menuItem.menuItemID})}">View</a>
-                <a th:href="@{/items/edit/{id}(id=${menuItem.menuItemID})}">Edit</a>
-                <a th:href="@{/items/delete/{id}(id=${menuItem.menuItemID})}">Delete</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+        <a
+                class="inline-block rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500"
+                href="#"
+        >
+            Download
+        </a>
+        <a th:href="@{/items/edit/{id}(id=${menuItem.menuItemID})}">Edit</a>
+        <a th:href="@{/items/delete/{id}(id=${menuItem.menuItemID})}">Delete</a>
+    </div>
+        <form th:action="@{/cart/add}" method="post">
+            <input type="hidden" th:name="menuItemID" th:value="${menuItem.menuItemID}" />
+            <input type="number" name="quantity" min="1" value="1" />
+            <button type="submit">Add to Cart</button>
+        </form>
+    </div>
+
+<!--            <td th:text="${menuItem.description}">Description</td>-->
+
+
 </section>
 </body>
 </html>

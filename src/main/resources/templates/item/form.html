@@ -6,7 +6,7 @@
 <body>
 <section layout:fragment="custom-content">
     <form th:action="@{/items/new}" th:object="${menuItem}" method="post" enctype="multipart/form-data">
-
+        <input type="hidden" th:field="*{menuItemID}" />
         <div>
             <label for="name">Name:</label>
             <input type="text" id="name" th:field="*{name}" />
@@ -29,12 +29,12 @@
             </select>
         </div>
         <div>
-            <label for="image">Upload Image:</label>
-            <input type="file" id="image" th:field="*{image}" name="image"/>
+            <label for="imageFile">Upload Image:</label>
+            <input type="file" id="imageFile" th:field="*{imageFile}" name="imageFile"/>
         </div>
         <div>
-            <label for="images">Upload Multiple Images:</label>
-            <input type="file" id="images" th:field="*{images}" name="images" multiple />
+            <label for="imageFiles">Upload Multiple Images:</label>
+            <input type="file" id="imageFiles" th:field="*{imageFiles}" name="imageFiles" multiple />
         </div>
         <div>
             <button type="submit">Save</button>
