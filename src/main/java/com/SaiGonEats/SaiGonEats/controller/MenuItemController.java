@@ -42,7 +42,11 @@ public class MenuItemController {
         model.addAttribute("menuItem", menuItemService.getMenuItemById(id));
         return "item/detail";
     }
-
+    @GetMapping("/list")
+    public String getAllMenuItem(Model model) {
+        model.addAttribute("menuItems", menuItemService.getAllMenuItem());
+        return "item/list";
+    }
     @GetMapping("/new")
     public String createMenuItemForm(Model model) {
         model.addAttribute("menuItem", new MenuItem());
@@ -54,11 +58,11 @@ public class MenuItemController {
     public String saveMenuItem(@Valid @ModelAttribute MenuItem menuItem, BindingResult result, Model model,
                                @RequestParam("image") MultipartFile image,
                                @RequestParam("images") MultipartFile[] images) {
-        if (result.hasErrors()) {
-            model.addAttribute("menuItem", menuItem);
-            model.addAttribute("menus", menuService.getAllMenus());
-            return "item/form";
-        }
+//        if (result.hasErrors()) {
+//            model.addAttribute("menuItem", menuItem);
+//            model.addAttribute("menus", menuService.getAllMenus());
+//            return "item/form";
+//        }
 
         List<String> images_temp = new ArrayList<>();
 
@@ -83,6 +87,8 @@ public class MenuItemController {
                 }
             }
         }
+        // Set the images field
+        menuItem.setImages(images_temp);
 
 //        MultipartFile imageFile = menuItem.getImageFile();
 //        if (imageFile != null && !imageFile.isEmpty()) {
@@ -101,10 +107,7 @@ public class MenuItemController {
 //            }
 //        }
 
-        // Set the images field
-        menuItem.setImages(images_temp);
-
-        menuItemService.addProduct(menuItem);
+        menuItemService.addMenuItem(menuItem);
         return "redirect:/";
     }
 
@@ -194,13 +197,13 @@ public class MenuItemController {
         // Set the images field
         menuItem.setImages(images_temp);
 
-        menuItemService.updateProduct(menuItem);
+        menuItemService.updateMenuItem(menuItem);
         return "redirect:/";
     }
     // Handle request to delete a product
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
-        menuItemService.deleteProductById(id);
+        menuItemService.deleteMenuItemById(id);
         return "redirect:/";
     }
 }

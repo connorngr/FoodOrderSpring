@@ -41,12 +41,13 @@ public class MenuController {
         menuService.addMenu(menu);
         return "redirect:/menu";
     }
-    @GetMapping("/edit/{id}")
+    @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
         Menu menu = menuService.getMenuById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid category Id:" + id));
         model.addAttribute("menu", menu);
         return "/menu/update";
+
     }
 
     @PostMapping("/update/{id}")

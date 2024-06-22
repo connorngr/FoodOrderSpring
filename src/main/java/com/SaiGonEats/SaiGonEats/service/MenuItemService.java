@@ -20,10 +20,10 @@ public class MenuItemService {
     public Optional<MenuItem> getMenuItemById(Long id) {
         return menuItemRepository.findById(id);
     }
-    public MenuItem addProduct(MenuItem menuItem) {
-        return menuItemRepository.save(menuItem);
+    public void addMenuItem(MenuItem menuItem) {
+        menuItemRepository.save(menuItem);
     }
-    public MenuItem updateProduct(@NotNull MenuItem menuItem) {
+    public void updateMenuItem(@NotNull MenuItem menuItem) {
         MenuItem existingMenuItem = menuItemRepository.findById(menuItem.getMenuItemID())
                 .orElseThrow(() -> new IllegalStateException("Product with ID " + menuItem.getMenuItemID() + " does not exist."));
         existingMenuItem.setName(menuItem.getName());
@@ -32,11 +32,11 @@ public class MenuItemService {
         existingMenuItem.setMenu(menuItem.getMenu());
         existingMenuItem.setImage(menuItem.getImage());
         existingMenuItem.setImages(menuItem.getImages());
-        return menuItemRepository.save(existingMenuItem);
+        menuItemRepository.save(existingMenuItem);
     }
 
     // Delete a product by its id
-    public void deleteProductById(Long id) {
+    public void deleteMenuItemById(Long id) {
         if (!menuItemRepository.existsById(id)) {
             throw new IllegalStateException("Product with ID " + id + " does not exist.");
         }
