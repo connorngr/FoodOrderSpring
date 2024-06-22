@@ -20,4 +20,10 @@ public class ShoppingCart {
     private User user;
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
     private List<ShoppingCartItem> items = new ArrayList<>(); // Initialize here;
+    public void clearItems() {
+        for (ShoppingCartItem item : items) {
+            item.setShoppingCart(null);
+        }
+        items.clear();
+    }
 }

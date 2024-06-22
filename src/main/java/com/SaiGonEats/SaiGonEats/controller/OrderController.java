@@ -4,7 +4,10 @@ import com.SaiGonEats.SaiGonEats.model.Order;
 import com.SaiGonEats.SaiGonEats.model.User;
 import com.SaiGonEats.SaiGonEats.repository.OrderRepository;
 import com.SaiGonEats.SaiGonEats.repository.IUserRepository;
+import com.SaiGonEats.SaiGonEats.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,5 +19,23 @@ import java.util.Optional;
 
 @Controller
 public class OrderController {
+    @Autowired
+    private OrderService orderService;
 
+    @GetMapping("/orders")
+    public String listOrders(@AuthenticationPrincipal UserDetails currentUser, Model model) {
+        List<Order> orders = orderService.getOrdersByUsername(currentUser.getUsername());
+        model.addAttribute("orders", orders);
+        return "order/list";
+    }
+
+    @GetMapping("/orders/{orderId}")
+    public String viewOrder(@PathVariable Long orderId, @AuthenticationPrincipal UserDetails currentUser, Model model) {
+        Order order = orderService.getOrderByIdAndUserEmail(orderId, currentUser.getUsername());
+        if (order == null) {
+            return "redirect:/orders";
+        }
+        model.addAttribute("order", order);
+        return "order/view";
+    }
 }

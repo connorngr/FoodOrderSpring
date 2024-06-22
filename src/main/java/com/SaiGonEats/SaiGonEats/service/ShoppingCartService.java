@@ -51,7 +51,7 @@ public class ShoppingCartService {
                 user.setShoppingCart(cart);
                 shoppingCartRepository.save(cart);
             }
-            //
+            //Add item to shopping cart item
             MenuItem menuItem = menuItemRepository.findById(menuItemID).orElseThrow();
             ShoppingCartItem cartItem = new ShoppingCartItem();
             cartItem.setMenuItem(menuItem);
@@ -90,7 +90,7 @@ public class ShoppingCartService {
                     totalAmount += cartItem.getQuantity() * cartItem.getPrice();
                     order.getOrderDetails().add(orderItem);
                 }
-
+                cart.clearItems();
                 order.setTotalAmount(totalAmount);
                 orderRepository.save(order);
             }
