@@ -19,7 +19,8 @@
             <td class="whitespace-nowrap px-4 py-2 text-gray-700" th:text="${menu.menuID}">1</td>
             <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900" th:text="${menu.name}">Menu Name</td>
             <td>
-                <a class="whitespace-nowrap px-4 py-2 text-gray-700" th:href="@{/menu/delete/{id}(id=${menu.menuID})}">Delete</a>
+                <a class="whitespace-nowrap px-4 py-2 text-gray-700" th:href="@{/menu/delete/{id}(id=${menu.menuID})}"
+                   onclick="return confirm('Are you sure?')">Delete</a>
             </td>
         </tr>
         </tbody>

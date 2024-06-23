@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 public class HomeController {
     @Autowired
@@ -20,7 +22,8 @@ public class HomeController {
 
     @GetMapping("/")
     public String getAllMenuItem(Model model) {
-        model.addAttribute("menuItems", menuItemService.getAllMenuItem());
+        List<MenuItem> menuItems = menuItemService.getAllMenuItem();
+        model.addAttribute("menuItems", menuItems);
         return "home/home";
     }
 }
