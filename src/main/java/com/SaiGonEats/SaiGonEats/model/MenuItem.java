@@ -31,7 +31,7 @@ public class MenuItem {
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     private String name;
-
+    @Size(min = 2, max = 1000, message = "Name must be between 2 and 100 characters")
     private String description;
     @NotNull(message = "Price is required")
     @Min(value = 0, message = "Price must be positive")
