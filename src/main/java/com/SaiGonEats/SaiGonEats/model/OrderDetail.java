@@ -3,6 +3,8 @@ package com.SaiGonEats.SaiGonEats.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
 
 import java.util.Date;
 
@@ -20,7 +22,8 @@ public class OrderDetail {
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "menuItemID", nullable = false)
+    @ColumnDefault("SET_NULL")
+    @JoinColumn(name = "menuItemID")
     private MenuItem menuItem;
 
     private Integer quantity;

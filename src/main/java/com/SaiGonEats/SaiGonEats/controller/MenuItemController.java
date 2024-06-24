@@ -33,7 +33,7 @@ public class MenuItemController {
 
     private static final String UPLOADED_FOLDER = "src/main/resources/static/images/";
 
-    @GetMapping("/{menuItemID}")
+    @GetMapping("/view/{menuItemID}")
     public String getMenuItemById(@PathVariable Long menuItemID, Model model) {
         MenuItem menuItem = menuItemService.getMenuItemById(menuItemID)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid menu item Id:" + menuItemID));
@@ -51,6 +51,7 @@ public class MenuItemController {
 
     @PostMapping
     public String saveMenuItem(@Valid @ModelAttribute MenuItem menuItem, BindingResult result, Model model) {
+        System.out.println(result.hasErrors());
         if (result.hasErrors()) {
             model.addAttribute("menus", menuService.getAllMenus());
             return "item/form";
@@ -105,7 +106,7 @@ public class MenuItemController {
     @PostMapping("/update/{menuItemID}")
     public String updateMenuItem(@PathVariable("menuItemID") Long menuItemID, @Valid @ModelAttribute MenuItem menuItem,
                                  BindingResult result, Model model) {
-        if (result.hasErrors()) {
+        if (!result.hasErrors()) {
             model.addAttribute("menus", menuService.getAllMenus());
             return "item/update-form"; // Ensure this path matches your Thymeleaf template for updating
         }

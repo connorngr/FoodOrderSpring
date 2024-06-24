@@ -33,7 +33,7 @@
         </form>
         <ul class="mt-8 grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-0" th:if="${menuItems != null}">
             <li th:each="menuItem : ${menuItems}" class="bg-white p-1 m-0 p-0" style="max-width:350px">
-                <a th:href="@{/items/{id}(id=${menuItem.menuItemID})}" class="group block overflow-hidden">
+                <a th:href="@{/items/view/{id}(id=${menuItem.menuItemID})}" class="group block overflow-hidden">
                     <img
                             th:src="@{${menuItem.images[0]}}"
                             alt=""
