@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+
+<body>
+<section layout:fragment="custom-content">
+    <h1>Your Orders</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.orderID}">Order ID</td>
+            <td th:text="${order.orderDate}">Date</td>
+            <td th:text="${order.totalAmount}">Total Amount</td>
+            <td th:text="${order.status}">Status</td>
+            <td><a th:href="@{/orders/{orderId}(orderId=${order.orderID})}">View</a></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

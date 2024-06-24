@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Restaurant List</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Restaurant List</h1>
+    <ul>
+        <!-- Loop through the restaurants and display each one -->
+        <li th:each="restaurant : ${restaurants}">
+            <span th:text="${restaurant.name}"></span>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
