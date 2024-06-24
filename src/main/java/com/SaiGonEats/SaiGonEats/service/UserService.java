@@ -8,6 +8,7 @@ import groovy.util.logging.Slf4j;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -61,5 +62,39 @@ public class UserService implements UserDetailsService {
             UsernameNotFoundException {
         return userRepository.findByUsername(username);
     }
+
+    public Optional<User> getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        return userRepository.findByUsername(username);
+    }
+
+    public void updateUser(User updatedUser) {
+        Optional<User> existingUserOptional = userRepository.findByUsername(updatedUser.getUsername());
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+            existingUser.setEmail(updatedUser.getEmail());
+            existingUser.setPhone(updatedUser.getPhone());
+            existingUser.setAddress(updatedUser.getAddress());
+            existingUser.setBirthDate(updatedUser.getBirthDate());
+
+            // Kiểm tra nếu có hình ảnh mới được tải lên
+            if (updatedUser.getImageFile() != null && !updatedUser.getImageFile().isEmpty()) {
+                // Bạn có thể thêm logic lưu trữ hình ảnh ở đây
+                existingUser.setImage(updatedUser.getImage());
+            }
+
+            userRepository.save(existingUser);
+            System.out.println("User updated: " + existingUser);
+        } else {
+            throw new UsernameNotFoundException("User not found");
+        }
+    }
+
 
 }

@@ -18,7 +18,7 @@ public class ShoppingCart {
     @OneToOne
     @JoinColumn(name = "userID")
     private User user;
-    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
     private List<ShoppingCartItem> items = new ArrayList<>(); // Initialize here;
     public void clearItems() {
         for (ShoppingCartItem item : items) {
