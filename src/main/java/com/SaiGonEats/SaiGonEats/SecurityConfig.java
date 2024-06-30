@@ -26,6 +26,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return new UserService(); // Cung cấp dịch vụ xử lý chi tiết người dùng.
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // Bean mã hóa mật khẩu sử dụng BCrypt.
@@ -44,11 +45,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(@NotNull HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/", "/oauth/**", "/register", "/error",
-                                "/products", "/cart", "/cart/**")
+                        .requestMatchers("/css/**", "/images/**", "/items/view/**", "/js/**", "/", "/oauth/**", "/register", "/error",
+                                "/products")//, "/cart", "/cart/**"
                         .permitAll() // Cho phép truy cập không cần xác thực.
-                        .requestMatchers("/products/edit/**", "/products/add", "/products/delete")
+                        .requestMatchers("/users", "/products/edit/**", "/products/add", "/products/delete")
                         .hasAnyAuthority("ADMIN") // Chỉ cho phép ADMIN truy cập.
+                        .requestMatchers("/products/edit/**", "/products/add")
+                        .hasAnyAuthority("EMPLOYEE") // Chỉ cho phép EMPLOYEE truy cập.
                         .requestMatchers("/api/**")
                         .permitAll() // API mở cho mọi người dùng.
                         .anyRequest().authenticated() // Bất kỳ yêu cầu nào khác cần xác thực.

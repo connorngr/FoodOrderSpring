@@ -3,7 +3,6 @@ package com.SaiGonEats.SaiGonEats.service;
 
 import com.SaiGonEats.SaiGonEats.model.MenuItem;
 import com.SaiGonEats.SaiGonEats.repository.MenuItemRepository;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,25 +19,34 @@ public class MenuItemService {
     public Optional<MenuItem> getMenuItemById(Long id) {
         return menuItemRepository.findById(id);
     }
-    public void addMenuItem(MenuItem menuItem) {
-        menuItemRepository.save(menuItem);
+
+    public MenuItem saveMenuItem(MenuItem menuItem) {
+        return menuItemRepository.save(menuItem);
     }
-    public void updateMenuItem(@NotNull MenuItem menuItem) {
-        MenuItem existingMenuItem = menuItemRepository.findById(menuItem.getMenuItemID())
-                .orElseThrow(() -> new IllegalStateException("Product with ID " + menuItem.getMenuItemID() + " does not exist."));
-        existingMenuItem.setName(menuItem.getName());
-        existingMenuItem.setPrice(menuItem.getPrice());
-        existingMenuItem.setDescription(menuItem.getDescription());
-        existingMenuItem.setMenu(menuItem.getMenu());
-        existingMenuItem.setImages(menuItem.getImages());
+    public void updateMenuItem(Long id, MenuItem updatedMenuItem) {
+        MenuItem existingMenuItem = getMenuItemById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid menu item Id:" + id));
+        // Copy properties from updatedMenuItem to existingMenuItem
+        existingMenuItem.setName(updatedMenuItem.getName());
+        existingMenuItem.setDescription(updatedMenuItem.getDescription());
+        existingMenuItem.setPrice(updatedMenuItem.getPrice());
+        existingMenuItem.setMenu(updatedMenuItem.getMenu());
+        existingMenuItem.setImages(updatedMenuItem.getImages());
         menuItemRepository.save(existingMenuItem);
     }
 
-    // Delete a product by its id
-    public void deleteMenuItemById(Long id) {
-        if (!menuItemRepository.existsById(id)) {
-            throw new IllegalStateException("Product with ID " + id + " does not exist.");
-        }
+    public void deleteMenuItem(Long id) {
         menuItemRepository.deleteById(id);
+    }
+    public List<MenuItem> searchMenuItems(String menuName, String name) {
+        if (menuName != null && !menuName.isEmpty() && name != null && !name.isEmpty()) {
+            return menuItemRepository.searchByMenuNameAndItemName(menuName, name);
+        } else if (menuName != null && !menuName.isEmpty()) {
+            return menuItemRepository.findByMenuNameContainingIgnoreCase(menuName);
+        } else if (name != null && !name.isEmpty()) {
+            return menuItemRepository.findByNameContainingIgnoreCase(name);
+        } else {
+            return null; // Return all items if no search parameters are provided
+        }
     }
 }

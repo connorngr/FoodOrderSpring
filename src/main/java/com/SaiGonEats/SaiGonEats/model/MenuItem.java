@@ -7,17 +7,18 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
-
 
 @Entity
 @NoArgsConstructor
 @Data
+@Setter
+@Getter
 public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,12 +31,16 @@ public class MenuItem {
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     private String name;
-
+    @Size(min = 2, max = 1000, message = "Check your description!")
     private String description;
     @NotNull(message = "Price is required")
     @Min(value = 0, message = "Price must be positive")
-    private double price;
-
+    private int price;
+    @OneToMany(mappedBy = "menuItem", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ShoppingCartItem> shoppingCartItems;
+    @OneToMany(mappedBy = "menuItem")
+    private List<OrderDetail> orderDetail;
+    @NotNull
     @ElementCollection
     private List<String> images;
 

@@ -7,7 +7,6 @@ import com.SaiGonEats.SaiGonEats.service.MenuItemService;
 import com.SaiGonEats.SaiGonEats.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.validation.Valid;
 import org.springframework.ui.Model;
@@ -19,11 +18,8 @@ import java.nio.file.Path;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.lang.String;
 
 
 @Controller
@@ -37,16 +33,15 @@ public class MenuItemController {
 
     private static final String UPLOADED_FOLDER = "src/main/resources/static/images/";
 
-    @GetMapping("/{id}")
-    public String getMenuItemById(@PathVariable Long id, Model model) {
-        model.addAttribute("menuItem", menuItemService.getMenuItemById(id));
-        return "item/detail";
+    @GetMapping("/view/{menuItemID}")
+    public String getMenuItemById(@PathVariable Long menuItemID, Model model) {
+        MenuItem menuItem = menuItemService.getMenuItemById(menuItemID)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid menu item Id:" + menuItemID));
+        model.addAttribute("menuItem", menuItem);
+        return "item/detail"; // Ensure this path matches your Thymeleaf template
     }
-    @GetMapping("/list")
-    public String getAllMenuItem(Model model) {
-        model.addAttribute("menuItems", menuItemService.getAllMenuItem());
-        return "item/list";
-    }
+
+
     @GetMapping("/new")
     public String createMenuItemForm(Model model) {
         model.addAttribute("menuItem", new MenuItem());
@@ -56,17 +51,18 @@ public class MenuItemController {
 
     @PostMapping("/new")
     public String saveMenuItem(@Valid @ModelAttribute MenuItem menuItem, BindingResult result, Model model) {
+        
 //        if (result.hasErrors()) {
 //            model.addAttribute("menus", menuService.getAllMenus());
 //            return "item/form";
 //        }
-        List<String> images_temp = new ArrayList<>();
+        List<String> images = new ArrayList<>();
 
         // Handle single image file
         MultipartFile imageFile = menuItem.getImageFile();
         if (imageFile != null && !imageFile.isEmpty()) {
             String imagePath = saveUploadedFile(imageFile);
-            images_temp.add(imagePath);
+            images.add(imagePath);
         }
 
         // Handle multiple image files
@@ -75,15 +71,15 @@ public class MenuItemController {
             for (MultipartFile file : imageFiles) {
                 if (!file.isEmpty()) {
                     String imagePath = saveUploadedFile(file);
-                    images_temp.add(imagePath);
+                    images.add(imagePath);
                 }
             }
         }
 
         // Set the images field
-        menuItem.setImages(images_temp);
+        menuItem.setImages(images);
 
-        menuItemService.addMenuItem(menuItem);
+        menuItemService.saveMenuItem(menuItem);
         return "redirect:/";
     }
 
@@ -98,42 +94,30 @@ public class MenuItemController {
             return null;
         }
     }
-    private String saveImageStatic(MultipartFile image) throws IOException {
-
-        Path dirImages = Paths.get("target/classes/static/images");
-        if (!Files.exists(dirImages)) {
-            Files.createDirectories(dirImages);
-        }
-
-        String newFileName = UUID.randomUUID()+ "." + StringUtils.getFilenameExtension(image.getOriginalFilename());
-
-        Path pathFileUpload = dirImages.resolve(newFileName);
-        Files.copy(image.getInputStream(), pathFileUpload,
-                StandardCopyOption.REPLACE_EXISTING);
-        return newFileName;
-    }
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
-        MenuItem menuItem = menuItemService.getMenuItemById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + id));
+    @GetMapping("/update/{menuItemID}")
+    public String showUpdateForm(@PathVariable("menuItemID") Long menuItemID, Model model) {
+        MenuItem menuItem = menuItemService.getMenuItemById(menuItemID)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid menu item Id:" + menuItemID));
         model.addAttribute("menuItem", menuItem);
         model.addAttribute("menus", menuService.getAllMenus());
-        return "/item/update";
+        return "item/update-form"; // Ensure this path matches your Thymeleaf template for updating
     }
-    // Process the form for updating a product
-    @PostMapping("/update/{id}")
-    public String updateProduct(@PathVariable Long id, @Valid MenuItem menuItem,BindingResult result) {
-        if (result.hasErrors()) {
-            menuItem.setMenuItemID(id); // set id to keep it in the form in case of errors
-            return "/item/update";
+
+    @PostMapping("/update/{menuItemID}")
+    public String updateMenuItem(@PathVariable("menuItemID") Long menuItemID, @Valid @ModelAttribute MenuItem menuItem,
+                                 BindingResult result, Model model) {
+        if (!result.hasErrors()) {
+            model.addAttribute("menus", menuService.getAllMenus());
+            return "item/update-form"; // Ensure this path matches your Thymeleaf template for updating
         }
-        List<String> images_temp = new ArrayList<>();
+
+        List<String> images = new ArrayList<>();
 
         // Handle single image file
         MultipartFile imageFile = menuItem.getImageFile();
         if (imageFile != null && !imageFile.isEmpty()) {
             String imagePath = saveUploadedFile(imageFile);
-            images_temp.add(imagePath);
+            images.add(imagePath);
         }
 
         // Handle multiple image files
@@ -142,21 +126,35 @@ public class MenuItemController {
             for (MultipartFile file : imageFiles) {
                 if (!file.isEmpty()) {
                     String imagePath = saveUploadedFile(file);
-                    images_temp.add(imagePath);
+                    images.add(imagePath);
                 }
             }
         }
 
         // Set the images field
-        menuItem.setImages(images_temp);
+        menuItem.setImages(images);
 
-        menuItemService.updateMenuItem(menuItem);
+        menuItemService.updateMenuItem(menuItemID, menuItem); // Ensure you have an update method in your service
+        return "redirect:/"; // Redirect to a relevant page after updating
+    }
+
+
+    @GetMapping("/delete/{menuItemID}")
+    public String deleteMenuItem(@PathVariable("menuItemID") Long menuItemID) {
+        menuItemService.deleteMenuItem(menuItemID);
         return "redirect:/";
     }
-    // Handle request to delete a product
-    @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable Long id) {
-        menuItemService.deleteMenuItemById(id);
-        return "redirect:/";
+    @GetMapping("/search")
+    public String searchMenuItems(@RequestParam(name = "name", required = false) String name,
+                                  @RequestParam(name = "menuID", required = false) Long menuID,
+                                  Model model) {
+        String menuName = menuID != null ? menuService.getMenuById(menuID).get().getName() : null;
+        List<MenuItem> menuItems = menuItemService.searchMenuItems(menuName, name);
+        if (menuItems == null || menuItems.isEmpty()) {
+            menuItems = null;
+        }
+        model.addAttribute("menus", menuService.getAllMenus());
+        model.addAttribute("menuItems", menuItems);
+        return "home/home"; // Ensure this path matches your Thymeleaf template for listing items
     }
 }

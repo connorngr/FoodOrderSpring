@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title th:text="${pageTitle}">My Website</title>
     <!-- Include CSS, meta tags, etc. -->
@@ -22,30 +22,51 @@
 
             <div class="md:flex md:items-center md:gap-12">
                 <nav aria-label="Global" class="hidden md:block">
-                    <ul class="flex items-center gap-6 text-sm">
+                    <ul class="flex items-center gap-6 text-sm" th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
                         <li>
-                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> About </a>
+                            <a
+                                    th:href="@{/ordersAdmin}" style="text-decoration: none;"
+                                    class="text-gray-500 transition hover:text-gray-500/75"
+                            >
+                                Order
+                            </a>
                         </li>
 
                         <li>
-                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Careers </a>
+                            <a
+                                    style="text-decoration: none;"
+                                    th:href="@{/menu}"
+                                    class="text-gray-500 transition hover:text-gray-500/75"
+                            >
+                                Menu
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="flex items-center gap-6 text-sm" th:if="${#authorization.expression('!hasAuthority(''ADMIN'')')}">
+                        <li>
+                            <a class="text-gray-500 transition hover:text-gray-500/75" href="/cart" style="text-decoration: none;"> Cart </a>
                         </li>
 
                         <li>
-                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> History </a>
+                            <a class="text-gray-500 transition hover:text-gray-500/75" href="/orders" style="text-decoration: none;"> Order </a>
                         </li>
 
-                        <li>
-                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Services </a>
-                        </li>
 
-                        <li>
-                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Projects </a>
-                        </li>
+                        <!--                        <li>-->
+<!--                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> History </a>-->
+<!--                        </li>-->
 
-                        <li>
-                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Blog </a>
-                        </li>
+<!--                        <li>-->
+<!--                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Services </a>-->
+<!--                        </li>-->
+
+<!--                        <li>-->
+<!--                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Projects </a>-->
+<!--                        </li>-->
+
+<!--                        <li>-->
+<!--                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Blog </a>-->
+<!--                        </li>-->
                     </ul>
                 </nav>
 
@@ -53,20 +74,28 @@
                     <div class="sm:flex sm:gap-4">
                         <a
                                 class="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow"
-                                href="#"
+                                th:href="@{/login}" sec:authorize="isAnonymous()"
                         >
                             Login
                         </a>
+<!--                        <a-->
+<!--                                class="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow"-->
+<!--                                th:href="@{/editProfile(id=${userId})}" sec:authorize="isAuthenticated()"-->
+<!--                        >-->
+<!--                            Profile-->
+<!--                        </a>-->
+
+
                         <div class="nav-item" sec:authorize="isAuthenticated()">
                             <form th:action="@{/logout}" method="post">
-                                <button class="btn btn-outline-light"
+                                <button class="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600"
                                         type="submit">Logout</button>
                             </form>
                         </div>
-                        <div class="hidden sm:flex">
+                        <div class="hidden sm:flex" sec:authorize="isAnonymous()">
                             <a
                                     class="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600"
-                                    href="#"
+                                    th:href="@{/register}"
                             >
                                 Register
                             </a>

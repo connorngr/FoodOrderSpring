@@ -20,9 +20,13 @@ public class HomeController {
     @Autowired
     private MenuItemService menuItemService;
 
+    @Autowired
+    private MenuService menuService;
+
     @GetMapping("/")
     public String getAllMenuItem(Model model) {
         List<MenuItem> menuItems = menuItemService.getAllMenuItem();
+        model.addAttribute("menus",menuService.getAllMenus());
         model.addAttribute("menuItems", menuItems);
         return "home/home";
     }

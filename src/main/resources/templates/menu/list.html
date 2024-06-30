@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
       layout:decorate="~{layout.html}">
 
 <body>
@@ -20,23 +19,34 @@
             <td class="whitespace-nowrap px-4 py-2 text-gray-700" th:text="${menu.menuID}">1</td>
             <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900" th:text="${menu.name}">Menu Name</td>
             <td>
-                <a class="whitespace-nowrap px-4 py-2 text-gray-700" th:href="@{/menu/update/{id}(id=${menu.menuID})}">Update</a>
-                <a class="whitespace-nowrap px-4 py-2 text-gray-700" th:href="@{/menu/delete/{id}(id=${menu.menuID})}"
-                   onclick="return confirm('Are you sure?')">Delete</a>
+                <a
+                        class="group relative inline-block text-sm font-medium text-white focus:outline-none focus:ring"
+                        th:href="@{/menu/delete/{id}(id=${menu.menuID})}"
+                        onclick="return confirm('Are you sure?')"
+                >
+                    <span class="absolute inset-0 border border-red-600 group-active:border-red-500"></span>
+                    <span
+                            class="block border border-red-600 bg-red-600 px-12 py-3 transition-transform active:border-red-500 active:bg-red-500 group-hover:-translate-x-1 group-hover:-translate-y-1"
+                    >
+    Delete
+  </span>
+                </a>
             </td>
         </tr>
         </tbody>
     </table>
     </div>
         <a th:href="@{/menu/new}" class=" group relative inline-block focus:outline-none focus:ring" href="#">
-  <span class="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-yellow-300 transition-transform group-hover:translate-x-0
-  group-hover:translate-y-0"></span>
+  <span
+          class="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-yellow-300 transition-transform group-hover:translate-x-0 group-hover:translate-y-0"
+  ></span>
 
-  <span class="relative inline-block border-2 border-current px-8 py-3 text-sm font-bold uppercase tracking-widest
-        text-black group-active:text-opacity-75">Create New Menu
+            <span
+                    class="relative inline-block border-2 border-current px-8 py-3 text-sm font-bold uppercase tracking-widest text-black group-active:text-opacity-75"
+            >
+    Create New Menu
   </span>
         </a>
-
 </section>
 </body>
 </html>
