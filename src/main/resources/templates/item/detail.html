@@ -58,7 +58,7 @@
             <img
                     th:src="@{${menuItem.images[0]}}"
                     alt=""
-                    class="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72 mb-5"
+                    class="rounded-lg h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72 mb-5"
             />
         </a>
 
@@ -105,7 +105,7 @@
     <h3 class="mt-4 text-lg font-medium text-gray-900" th:text="${menuItem.description}">Robot Toy</h3>
     <div class="additional-images">
         <div th:each="image : ${menuItem.images}">
-            <img th:src="@{${image}}" alt="Image" style="max-width:300px"/>
+            <img class="rounded-md" th:src="@{${image}}" alt="Image" style="max-width:300px"/>
         </div>
     </div>
     </div>

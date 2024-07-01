@@ -46,7 +46,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(@NotNull HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/images/**", "/image/**", "/items/view/**", "/js/**", "/", "/oauth/**", "/register", "/error",
+                        .requestMatchers("/css/**", "/image/**", "/items/view/**", "/js/**", "/", "/oauth/**", "/register", "/error",
                                 "/products")
                         .permitAll() // Cho phép truy cập không cần xác thực.
                         .requestMatchers("/users", "/products/edit/**", "/products/add", "/products/delete")

@@ -8,6 +8,7 @@
 <body>
 
 <section layout:fragment="custom-content">
+        <div th:replace="~{fragments/banner}"></div>
     <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
 
         <div th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
@@ -28,7 +29,7 @@
                                     class="block rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring"
                                     type="button"
                             >
-                                Create new menuItem
+                                Create new Item
                             </a>
                         </div>
 
@@ -39,15 +40,15 @@
             </header>
             </div>
         <form th:action="@{/items/search}" method="get" class="mt-8">
-            <div class="flex items-center">
+            <div class="flex items-center gap-4">
                 <select id="menu" name="menuID" class="form-select mr-2 px-4 py-2 border rounded-lg">
                     <option value="">Select Menu</option>
                     <option th:each="menu : ${menus}" th:value="${menu.menuID}" th:text="${menu.name}">Menu Name</option>
                 </select>
                 <!-- Input field for searching by menu name -->
                 <input type="text" name="name" placeholder="Search by item name" class="form-input mr-2 px-4 py-2 border rounded-lg" />
-                <button type="submit" class="btn btn-primary px-4 py-2 rounded-lg bg-blue-500 text-white">Search</button>
-                <a th:href="@{/}" class="btn btn-primary px-4 py-2 rounded-lg bg-blue-500 text-white">Refesh</a>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-yellow-500 text-white">Search</button>
+                <a th:href="@{/}" class="btn btn-primary px-4 py-2 rounded-lg bg-orange-500 text-white">Refesh</a>
             </div>
         </form>
         <ul class="mt-8 grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 p-0" th:if="${menuItems != null}">
@@ -56,28 +57,33 @@
                     <img
                             th:src="@{${menuItem.images[0]}}"
                             alt=""
-                            class="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
+                            class="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px] rounded-lg"
                     />
                 </a>
                 <div class="relative bg-white pt-3">
-                    <h3 class="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4" th:text="${menuItem.menu.name} + ', ' + ${menuItem.name}">
+                    <h3 class="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4" th:text="${menuItem.menu.name}">
                         Basic Tee
                     </h3>
-                    <p class="mt-2">
+                    <h3 class="text-lg text-gray-700 group-hover:underline group-hover:underline-offset-4" th:text="${menuItem.name}">
+                        Basic Tee
+                    </h3>
+                    <p class="my-3">
+
                         <span class="sr-only"> Regular Price </span>
-                        <span class="tracking-wider text-gray-900" th:text="${menuItem.price} + ' VND'"> £24.00 GBP </span>
+                        <p class="tracking-wider text-gray-900" th:text="${menuItem.price} + ' VND'"> £24.00 GBP </p>
                     </p>
                     <div th:if="${#authorization.expression('!hasAuthority(''ADMIN'')')}">
                         <form th:action="@{/cart/add}" method="post">
                             <input type="hidden" th:name="menuItemID" th:value="${menuItem.menuItemID}" />
                             <input type="number" name="quantity" min="1" value="1" class="form-control" />
-                            <button type="submit" class="btn btn-primary mt-1">Add to Cart</button>
+                            <button type="submit" class="rounded-md bg-red-500 px-5 py-2.5 text-sm font-medium text-white shadow"
+                            >Add to Cart</button>
                         </form>
                     </div>
 
                     <div th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
                         <a
-                                class="inline-block rounded bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500"
+                                class="ml-3 inline-block rounded bg-indigo-600 px-8 py-3 text-sm font-medium text-white transition hover:scale-110 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500"
                                 th:href="@{/items/update/{id}(id=${menuItem.menuItemID})}"
                         >
                             Update

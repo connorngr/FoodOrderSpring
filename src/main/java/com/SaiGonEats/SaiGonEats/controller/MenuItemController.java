@@ -31,7 +31,7 @@ public class MenuItemController {
     @Autowired
     private MenuService menuService;
 
-    private static final String UPLOADED_FOLDER = "src/main/resources/static/images/";
+    private static final String UPLOADED_FOLDER = "src/main/resources/static/image/";
 
     @GetMapping("/view/{menuItemID}")
     public String getMenuItemById(@PathVariable Long menuItemID, Model model) {
@@ -88,7 +88,7 @@ public class MenuItemController {
             byte[] bytes = file.getBytes();
             Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
             Files.write(path, bytes);
-            return "/images/" + file.getOriginalFilename();
+            return "/image/" + file.getOriginalFilename();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
