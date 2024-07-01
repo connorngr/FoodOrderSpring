@@ -31,7 +31,7 @@ public class MenuItemController {
     @Autowired
     private MenuService menuService;
 
-    private static final String UPLOADED_FOLDER = "src/main/resources/static/images/";
+    private static final String UPLOADED_FOLDER = "src/main/resources/static/image/";
 
     @GetMapping("/view/{menuItemID}")
     public String getMenuItemById(@PathVariable Long menuItemID, Model model) {
@@ -49,13 +49,13 @@ public class MenuItemController {
         return "item/form";
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public String saveMenuItem(@Valid @ModelAttribute MenuItem menuItem, BindingResult result, Model model) {
-        System.out.println(result.hasErrors());
-        if (result.hasErrors()) {
-            model.addAttribute("menus", menuService.getAllMenus());
-            return "item/form";
-        }
+        
+//        if (result.hasErrors()) {
+//            model.addAttribute("menus", menuService.getAllMenus());
+//            return "item/form";
+//        }
         List<String> images = new ArrayList<>();
 
         // Handle single image file
@@ -88,7 +88,7 @@ public class MenuItemController {
             byte[] bytes = file.getBytes();
             Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
             Files.write(path, bytes);
-            return "/images/" + file.getOriginalFilename();
+            return "/image/" + file.getOriginalFilename();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -146,15 +146,12 @@ public class MenuItemController {
     }
     @GetMapping("/search")
     public String searchMenuItems(@RequestParam(name = "name", required = false) String name,
-                                  @RequestParam(name = "menuName", required = false) String menuName,
+                                  @RequestParam(name = "menuID", required = false) Long menuID,
                                   Model model) {
-        List<MenuItem> menuItems;
-        if (name != null && !name.isEmpty()) {
-            menuItems = menuItemService.searchMenuItemsByName(name);
-        } else if (menuName != null && !menuName.isEmpty()) {
-            menuItems = menuItemService.searchMenuItemsByMenuName(menuName);
-        } else {
-            menuItems = menuItemService.getAllMenuItem();
+        String menuName = menuID != null ? menuService.getMenuById(menuID).get().getName() : null;
+        List<MenuItem> menuItems = menuItemService.searchMenuItems(menuName, name);
+        if (menuItems == null || menuItems.isEmpty()) {
+            menuItems = null;
         }
         model.addAttribute("menus", menuService.getAllMenus());
         model.addAttribute("menuItems", menuItems);

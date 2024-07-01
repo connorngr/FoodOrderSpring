@@ -1,6 +1,7 @@
 package com.SaiGonEats.SaiGonEats.service;
 
 import com.SaiGonEats.SaiGonEats.model.Menu;
+import com.SaiGonEats.SaiGonEats.model.MenuItem;
 import com.SaiGonEats.SaiGonEats.repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

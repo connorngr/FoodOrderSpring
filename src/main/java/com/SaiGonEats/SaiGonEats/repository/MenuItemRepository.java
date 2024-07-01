@@ -16,4 +16,10 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
 
     @Query("SELECT mi FROM MenuItem mi JOIN mi.menu m WHERE LOWER(m.name) LIKE LOWER(CONCAT('%', :menuName, '%'))")
     List<MenuItem> findByMenuNameContainingIgnoreCase(@Param("menuName") String menuName);
+
+    @Query("SELECT mi FROM MenuItem mi JOIN mi.menu m WHERE " +
+            "(:menuName IS NULL OR LOWER(m.name) LIKE LOWER(CONCAT('%', :menuName, '%'))) AND " +
+            "(:name IS NULL OR LOWER(mi.name) LIKE LOWER(CONCAT('%', :name, '%')))")
+    List<MenuItem> searchByMenuNameAndItemName(@Param("menuName") String menuName,
+                                               @Param("name") String name);
 }

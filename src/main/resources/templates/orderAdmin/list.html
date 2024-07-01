@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout.html}">
+
+<body>
+<section layout:fragment="custom-content">
+    <a class="inline-block rounded-full border border-indigo-600 bg-indigo-600 p-3 text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500" th:href="@{/}">
+        <span class="sr-only">Back</span>
+        <svg class="size-5 rtl-flip" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+    </a>
+
+    <header class="text-center">
+        <h1 class="text-xl font-bold text-gray-900 sm:text-3xl">List of orders</h1>
+    </header>
+    <div class="overflow-x-auto mt-8">
+        <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+            <thead class="ltr:text-left rtl:text-right">
+            <tr>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Username</th>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Total price</th>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Date</th>
+                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Status</th>
+                <th class="px-4 py-2"></th>
+            </tr>
+            </thead>
+
+            <tbody class="divide-y divide-gray-200" th:each="order : ${orders}">
+            <tr class="space-y-4" >
+                <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900" th:text="${order.user.username}">Username</td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700" th:text="${order.totalAmount}">Amount</td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700" th:text="${order.orderDate}">Date</td>
+                <td class="whitespace-nowrap px-4 py-2 text-gray-700" th:text="${order.status}">Status</td>
+                <td class="whitespace-nowrap px-4 py-2">
+                    <a
+                            th:href="@{/ordersAdmin/{orderId}(orderId=${order.orderID})}"
+                            class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
+                    >
+                        View
+                    </a>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</section>
+
+</body>
+</html>

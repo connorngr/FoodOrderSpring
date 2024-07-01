@@ -1,0 +1,21 @@
+h1, a, button {
+  font-family: "Merienda", cursive;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+}
+.rtl-flip {
+    transform: scaleX(-1);
+}
+.content-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center; /* Optional: To center text inside the div */
+}
+body, span {
+font-family: "Be Vietnam Pro", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}

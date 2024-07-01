@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+
+<body>
+<section layout:fragment="custom-content">
+    <a class="inline-block rounded-full border border-indigo-600 bg-indigo-600 p-3 text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500" th:href="@{/ordersAdmin}">
+        <span class="sr-only">Back</span>
+        <svg class="size-5 rtl-flip" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+    </a>
+
+    <div class="flow-root">
+        <dl class="-my-3 divide-y divide-gray-100 text-sm">
+            <div class="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-gray-900">Order ID</dt>
+                <dd class="text-gray-700 sm:col-span-2" th:text="${order.orderID}">Mr</dd>
+            </div>
+
+            <div class="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-gray-900">Total Amount</dt>
+                <dd class="text-gray-700 sm:col-span-2" th:text="${order.totalAmount}">Total amount</dd>
+            </div>
+
+            <div class="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-gray-900">Order Date</dt>
+                <dd class="text-gray-700 sm:col-span-2" th:text="${order.orderDate}">Date</dd>
+            </div>
+
+            <div class="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-gray-900">Address</dt>
+                <dd class="text-gray-700 sm:col-span-2" th:text="${order.address}">Date</dd>
+            </div>
+
+            <div class="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
+                <dt class="font-medium text-gray-900">Phone</dt>
+                <dd class="text-gray-700 sm:col-span-2" th:text="${order.phone}">Phone</dd>
+            </div>
+        </dl>
+    </div>
+
+    <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <div class="mx-auto max-w-3xl">
+            <header class="text-center">
+                <h1 class="text-xl font-bold text-gray-900 sm:text-3xl">Detail</h1>
+
+            </header>
+<!--            th:if="${order != null}"-->
+            <div class="mt-8" >
+                <ul class="space-y-4" th:each="item : ${order.orderDetails}">
+                    <li class="flex items-center gap-4">
+                        <img
+                                th:src="@{${item.menuItem.images[0]}}"
+                                alt=""
+                                class="size-16 rounded object-cover"
+                        />
+
+                        <div>
+                            <h3 class="text-sm text-gray-900" th:text="${item.menuItem.name}">Name</h3>
+
+                            <dl class="mt-0.5 space-y-px text-[10px] text-gray-600">
+                                <div>
+                                    <dt class="inline">Quantity:</dt>
+                                    <dd class="inline" th:text="${item.quantity}">Quantity</dd>
+                                </div>
+
+                                <div>
+                                    <dt class="inline">Price:</dt>
+                                    <dd class="inline" th:text="${item.price} + ' x 1 VND'">Price</dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <div class="flex flex-1 items-center justify-end gap-2">
+                            <div>
+                                <dt class="inline">Status:</dt>
+                                <dd class="inline" th:text="${order.status}">Status</dd>
+                            </div>
+
+                            </div>
+
+
+                    </li>
+                    <dl class="space-y-0.5 text-sm text-gray-700">
+                        <div class="flex justify-between !text-base font-medium">
+                            <dt>Total</dt>
+                            <dd th:text="${item.quantity * item.price} + ' VND'">£200</dd>
+                        </div>
+                    </dl>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

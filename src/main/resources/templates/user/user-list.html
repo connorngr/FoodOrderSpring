@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+<body>
+<section layout:fragment="custom-content">
+<h1>Users</h1>
+<table>
+    <tr>
+        <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Email</th>
+        <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Phone</th>
+        <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Roles</th>
+        <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Actions</th>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td class="whitespace-nowrap px-4 py-2 text-gray-700" th:text="${user.email}"></td>
+        <td class="whitespace-nowrap px-4 py-2 text-gray-700" th:text="${user.phone}"></td>
+        <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+            <ul>
+                <li th:each="role : ${user.roles}" th:text="${role.name}"></li>
+            </ul>
+        </td>
+        <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+            <a class="relative inline-block border-2 border-current px-8 py-3 text-sm font-bold uppercase tracking-widest text-black group-active:text-opacity-75" th:href="@{/users/{userId}/edit(userId=${user.ID})}">Edit</a>
+        </td>
+    </tr>
+</table>
+</section>
+</body>
+</html>

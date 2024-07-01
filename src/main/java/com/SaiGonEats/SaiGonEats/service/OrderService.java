@@ -1,5 +1,6 @@
 package com.SaiGonEats.SaiGonEats.service;
 
+import com.SaiGonEats.SaiGonEats.model.Menu;
 import com.SaiGonEats.SaiGonEats.model.Order;
 import com.SaiGonEats.SaiGonEats.model.User;
 import com.SaiGonEats.SaiGonEats.repository.OrderRepository;
@@ -19,5 +20,13 @@ public class OrderService {
     }
     public Order getOrderByIdAndUserEmail(Long orderId, String email) {
         return orderRepository.findByOrderIDAndUserUsername(orderId, email);
+    }
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    public Order getOrderById(Long orderId) {
+        Optional<Order> order = orderRepository.findById(orderId);
+        return order.orElse(null);
     }
 }

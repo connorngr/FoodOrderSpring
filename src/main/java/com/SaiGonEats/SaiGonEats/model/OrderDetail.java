@@ -22,7 +22,6 @@ public class OrderDetail {
     private Order order;
 
     @ManyToOne
-    @ColumnDefault("SET_NULL")
     @JoinColumn(name = "menuItemID")
     private MenuItem menuItem;
 

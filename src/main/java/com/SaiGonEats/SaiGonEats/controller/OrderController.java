@@ -38,4 +38,20 @@ public class OrderController {
         model.addAttribute("order", order);
         return "order/view";
     }
+    @GetMapping("/ordersAdmin")
+    public String listOrdersAdmin(@AuthenticationPrincipal UserDetails currentUser, Model model) {
+        List<Order> orders = orderService.getAllOrders();
+        model.addAttribute("orders", orders);
+        return "orderAdmin/list";
+    }
+    @GetMapping("/ordersAdmin/{orderId}")
+    public String viewOrderAdmin(@PathVariable Long orderId, @AuthenticationPrincipal UserDetails currentUser, Model model) {
+        Order order = orderService.getOrderById(orderId);
+        if (order == null) {
+            return "redirect:/ordersAdmin";
+        }
+        model.addAttribute("order", order);
+        return "orderAdmin/view";
+    }
+
 }

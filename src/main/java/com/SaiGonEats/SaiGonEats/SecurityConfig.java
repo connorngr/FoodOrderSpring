@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationEntryPoint;
 
+
 @Configuration // Đánh dấu lớp này là một lớp cấu hình cho Spring Context.
 @EnableWebSecurity // Kích hoạt tính năng bảo mật web của Spring Security.
 @RequiredArgsConstructor // Lombok tự động tạo constructor có tham số cho tất cả các trường final.
@@ -26,6 +27,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return new UserService(); // Cung cấp dịch vụ xử lý chi tiết người dùng.
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // Bean mã hóa mật khẩu sử dụng BCrypt.
@@ -44,11 +46,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(@NotNull HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/images/**", "/items/view/**", "/js/**", "/", "/oauth/**", "/register", "/error",
-                                "/products")//, "/cart", "/cart/**"
+                        .requestMatchers("/css/**", "/image/**", "/items/view/**", "/js/**", "/", "/oauth/**", "/register", "/error",
+                                "/products")
                         .permitAll() // Cho phép truy cập không cần xác thực.
-                        .requestMatchers("/products/edit/**", "/products/add", "/products/delete")
+                        .requestMatchers("/users", "/products/edit/**", "/products/add", "/products/delete")
                         .hasAnyAuthority("ADMIN") // Chỉ cho phép ADMIN truy cập.
+                        .requestMatchers("/products/edit/**", "/products/add")
+                        .hasAnyAuthority("EMPLOYEE") // Chỉ cho phép EMPLOYEE truy cập.
                         .requestMatchers("/api/**")
                         .permitAll() // API mở cho mọi người dùng.
                         .anyRequest().authenticated() // Bất kỳ yêu cầu nào khác cần xác thực.

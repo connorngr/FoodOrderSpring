@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Update Menu</title>
+</head>
+<body>
+<h1 class="mb-4">Update Menu</h1>
+<section layout:fragment="custom-content">
+    <form th:action="@{/menu/update/{id}(id=${menu.id})}"
+          th:object="${menu}" method="post" class="needs-validation" novalidate>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Menu Name:</label>
+            <input type="text" th:field="*{name}" class="form-control" id="name" required>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
+                 th:errors="*{name}">Valid name is required.</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+
+    </form>
+    <a th:href="@{/menu}" class="btn btn-link">Cancel</a>
+</section>
+</body>
+</html>

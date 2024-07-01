@@ -38,11 +38,15 @@ public class MenuItemService {
     public void deleteMenuItem(Long id) {
         menuItemRepository.deleteById(id);
     }
-    public List<MenuItem> searchMenuItemsByName(String name) {
-        return menuItemRepository.findByNameContainingIgnoreCase(name);
-    }
-
-    public List<MenuItem> searchMenuItemsByMenuName(String menuName) {
-        return menuItemRepository.findByMenuNameContainingIgnoreCase(menuName);
+    public List<MenuItem> searchMenuItems(String menuName, String name) {
+        if (menuName != null && !menuName.isEmpty() && name != null && !name.isEmpty()) {
+            return menuItemRepository.searchByMenuNameAndItemName(menuName, name);
+        } else if (menuName != null && !menuName.isEmpty()) {
+            return menuItemRepository.findByMenuNameContainingIgnoreCase(menuName);
+        } else if (name != null && !name.isEmpty()) {
+            return menuItemRepository.findByNameContainingIgnoreCase(name);
+        } else {
+            return null; // Return all items if no search parameters are provided
+        }
     }
 }

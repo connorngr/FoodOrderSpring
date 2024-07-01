@@ -24,7 +24,7 @@ public class Order {
 
     private LocalDateTime orderDate;
 
-    private Double totalAmount;
+    private int totalAmount;
 
     private String status;
 

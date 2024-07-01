@@ -54,6 +54,7 @@ public class ShoppingCartService {
             //Add item to shopping cart item
             MenuItem menuItem = menuItemRepository.findById(menuItemID).orElseThrow();
             ShoppingCartItem cartItem = new ShoppingCartItem();
+
             cartItem.setMenuItem(menuItem);
             cartItem.setQuantity(quantity);
             cartItem.setPrice(menuItem.getPrice());
@@ -67,33 +68,42 @@ public class ShoppingCartService {
         ShoppingCartItem cartItem = shoppingCartItemRepository.findById(cartItemID).orElseThrow();
         shoppingCartItemRepository.delete(cartItem);
     }
-    public void checkout(String username) {
-        Optional<User> optionalUser = iUserRepository.findByUsername(username);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            ShoppingCart cart = user.getShoppingCart();
-            if (cart != null && !cart.getItems().isEmpty()) {
-                Order order = new Order();
-                order.setUser(user);
-                order.setOrderDate(LocalDateTime.now());
-                order.setStatus("PENDING");
-                order.setAddress(user.getAddress());
-                order.setPhone(user.getPhone());
-
-                double totalAmount = 0.0;
-                for (ShoppingCartItem cartItem : cart.getItems()) {
-                    OrderDetail orderItem = new OrderDetail();
-                    orderItem.setOrder(order);
-                    orderItem.setMenuItem(cartItem.getMenuItem());
-                    orderItem.setQuantity(cartItem.getQuantity());
-                    orderItem.setPrice(cartItem.getPrice());
-                    totalAmount += cartItem.getQuantity() * cartItem.getPrice();
-                    order.getOrderDetails().add(orderItem);
-                }
-                cart.clearItems();
-                order.setTotalAmount(totalAmount);
-                orderRepository.save(order);
-            }
+    public void updateCartItem(Long cartItemID, int quantity, String username) {
+        // Logic to update the quantity of an item in the cart
+        Optional<ShoppingCartItem> cartItemOpt = shoppingCartItemRepository.findById(cartItemID);
+        if (cartItemOpt.isPresent()) {
+            ShoppingCartItem cartItem = cartItemOpt.get();
+            cartItem.setQuantity(quantity);
+            shoppingCartItemRepository.save(cartItem);
         }
     }
+//    public void checkout(String username) {
+//        Optional<User> optionalUser = iUserRepository.findByUsername(username);
+//        if (optionalUser.isPresent()) {
+//            User user = optionalUser.get();
+//            ShoppingCart cart = user.getShoppingCart();
+//            if (cart != null && !cart.getItems().isEmpty()) {
+//                Order order = new Order();
+//                order.setUser(user);
+//                order.setOrderDate(LocalDateTime.now());
+//                order.setStatus("PENDING");
+//                order.setAddress(user.getAddress());
+//                order.setPhone(user.getPhone());
+//
+//                int totalAmount = 0.0;
+//                for (ShoppingCartItem cartItem : cart.getItems()) {
+//                    OrderDetail orderItem = new OrderDetail();
+//                    orderItem.setOrder(order);
+//                    orderItem.setMenuItem(cartItem.getMenuItem());
+//                    orderItem.setQuantity(cartItem.getQuantity());
+//                    orderItem.setPrice(cartItem.getPrice());
+//                    totalAmount += cartItem.getQuantity() * cartItem.getPrice();
+//                    order.getOrderDetails().add(orderItem);
+//                }
+//                cart.clearItems();
+//                order.setTotalAmount(totalAmount);
+//                orderRepository.save(order);
+//            }
+//        }
+//    }
 }
